@@ -1,0 +1,540 @@
+﻿[Tópicos Especiais em Informática - Aula 19/02/2022]--------------------------
+
+Laravel Aplicação Web
+[f1() f2() f3()]
+
+Rota é uma url
+http://.../alunos
+http://.../disciplinas
+
+Routes
+    Web.php
+
+Route::get(URL1, F1)
+Route::post(URL1, F2)
+
+<form action='aluno' method='GET'>
+    <input type="text"   name='c1'    />
+    <input type="submit" name="enviar"/>
+</form>
+
+Criar workspace no Gitpod template-php-laravel-mysql
+
+CRUD Funcionario
+
+Lembretes:
+    Como colocar a aplicação em execução no servidor de desenvolvimento?
+        $ php artisan serve -> RODA A APLICAÇÃO
+        CTRL + C            -> Interrompe a execução de um comando
+        
+    $ php artisan make:controller FuncionarioController --resource -> Cria um Controller, com o --resource gera as funções necessárias para o CRUD
+
+• Arquivo CRUDv2.pdf nos arquivos de aula no Teams
+
+[Padrão MVC]
+Model são objetos armazenados no banco
+View recebe os dados prontos, gera o html e envia para o usuário
+Controller.
+
+2º Criar Model Funcionario
+
+Obs.: Model são objetos do negócio contendo os dados e, portanto, precisam ser persistentes (persistidos) (armazenado em BD)
+
+$ php artisan make:model Funcionario
+
+Outras possiblidades de criar um Model:
+    $ php artisan make:model Funcionario --controller --resource -> Cria Model e Controller com o mesmo comando + resources
+
+    $ ... --controller -> Cria também um Controller
+    $ ... --resource  -> Cria no "FuncionarioController" as funções de CRUD (index, create, e etc)
+    $ ... --migration -> Serve para armazenar no banco. (Class responsável por alterar o banco de dados: criar, editar etc)
+    $ ... --factory   -> Quando criar uma tabela no banco terá alguns dados mockados. (Inserir dados para testes)
+
+    $ php artisan make:request FuncionarioRequest --> Valida dados entrados pelos usuários
+
+Migration -> Função Up e Função Down (Serve para criar a estrutura de tabelas)
+
+Up   -> Muda o banco
+Down -> Desfaz o que o Up fez
+
+4º Passo - Configurar conexão ao BD
+No arquivo .env na raiz do projeto, configurar os parametros de conexão com o BD.
+
+5º Passo - executar a migração
+
+$ php artisan migrate -> Executa (função UP) as migrações pendentes
+$ php artisan migrate:status -> Informa quais migrações ja foram executadas e quais pendentes de execução
+
+$ php artisan migrate:rollback --step=1 -> Executa a função DOWN da última migração (--step=1)
+
+[Tópicos Especiais em Informática - Aula 05/03/2022]--------------------------
+https://gitpod.io/
+
+=======
+
+Exercícios de revisão:
+
+1) Usando o terminal, criar um controller
+(ComputadorController)
+
+$ php artisan make:model Computador --controller
+$ php artisan make:controller ComputadorController
+
+2) Criar em ComputadorController, codificar função abc() que retorna a string 'ok'.
+
+{
+    public function abc ()
+    {
+        return 'ok';
+    }
+}
+
+3) Definir uma rota para que o usuário através da URL possa executar a função criada.
+
+A função abc() deve ser acionada quando o usuário gere a requisição.
+htpp://localhost:8000/xxx
+
+• routes/web.php arquivo das rotas !
+
+    1. No arquivo web.php
+        Route::get('xxx', [ComputadorController::class, 'abc']);
+
+    2. No topo do arquivo web.php
+        use App\Http\Controllers\ComputadorController;
+
+4) Em um único comando no terminal, criar:
+- Model: Automovel2
+- Criar o AtomovelController
+- As funções necessárias ao CRUD de Automovel2Controller
+- A migração para criar a tabela automoveis no BD
+
+$ php artisan make:model Automovel2
+$ php artisan make:controller Automovel2Controller
+$ php artisan make:migration CriarAutomovel2 --create=Automovel2
+
+$ php artisan make:model Automovel2 --controller --resource --migration
+
+
+ -- Model = Objetos do negócio, objetos que tem os dados
+
+ 5) Definir para o model Automovel2 as propriedades:
+ - id
+ - marca
+ - placa
+ - preco
+
+ 6) Programar a migração para criar a tabela Automovel2s que armazenará os models
+
+ 7) Criar no controller função testeCadastro() que instancie um objeto Automovel2, atribua valores as suas propriedades e salve o objeto no BD. Definir rota para acionamento da função a partir de URL no Navegador.
+
+    $ php artisan migrate
+    $ php artisan tinker
+    $ use App\Models\Automovel2;
+    
+    // Recuperar do BD todos
+    $ Automovel2::all();
+
+    // Recuperar do BD um Automovel2 pelo ID'
+    $ Automovel2::find(1);
+
+    // Recuperar todas as rotas que existem
+    $php artisan route:list
+
+[Tópicos Especiais em Informática - Aula 12/03/2022]--------------------------
+
+Arquivo TutorialCRUD8.pdf em:
+Geral -> Arquivos -> Material de Aula
+
+Máquina Virtual: Visual Studio 2019
+Passo 1: Criar uma pasta em qualquer local
+    Exemplo:
+    $ c:\LaravelProj
+
+Passo 2: Abrir prompt de comando (cmd)
+    $ cd c:\LaravelProj
+
+Passo 3: 
+    $ git clone https://github.com/prtcandido/exemploLaravel8
+    Vai ser criada a pasta c:\LaravelProj\exemploLaravel8
+
+Passo 4:
+    Instalar as dependências
+    cd c:\LaravelProj\exemploLaravel8
+    $ composer install
+
+Xampp -> 
+    Start MySQL
+    Start Apache
+
+navegar a localhost
+Clicar em PhpMyAdmin -> Base de Dados
+
+No projeto, renomear o arquivo .env.example para .env 
+Alterar no arquivo .env:
+    DB_DATABASE=bd8
+
+No navegador, digitar o nome "db8" e clicar em criar
+
+No projeto:
+    $ php artisan migrate
+    $ php artisan migrate:status
+
+No phpMyAdmin:
+    Clicar em db8 na esquerda
+
+No projeto:
+    $ php artisan
+    $ php artisan key:generate 
+        (Para gerar o APP_KEY no .env)
+    $ php artisan serve
+    $ ^C
+    $ php artisan migrate:fresh
+
+    ...
+
+    $ php artisan migrate:fresh --seed
+
+Validações no lado do servidor (Laravel)
+
+    $ php artisan route:list
+
+[Tópicos Especiais em Informática - Aula 19/03/2022]--------------------------
+
+Exercício: Manter cadastro de máquinas
+
+1) Criar o model e todos os demais componentes necessários
+$ php artisan make:model Maquina --controller --resource --migration --factory
+
+2) Criar componente request para validação dos dados entrados pelos usuários
+$ php artisan make:request MaquinaRequest
+
+3) Criar rotas para acionamento das funções do controller
+    Ir em routes -> web.php
+
+    use App\Http\Controllers\MaquinaController;
+    Route:resource('maquina',MaquinaController::class);
+
+    Verificar se rotas foram corretamente geradas:
+    $ php artisan route:list
+
+    Exemplo:
+    [GET] http://localhost:8000/maquina/3 -> maquina.show
+    Vai acionar a funçaõ SHOW do MaquinaController
+
+    [DELETE] http://localhost:8000/maquina/3 -> maquina.destroy
+    Vai acionar a função DESTROY do MaquinaController
+
+    [GET] http://localhost:8000/maquina -> maquina.index
+    Vai acionar a função INDEX do MaquinaController
+
+    [GET] http://localhost:8000/maquina/create -> maquina.create
+    Vai acionar a função CREATE do MaquinaController
+
+4) Codificar o model
+    app -> Models -> Maquina.php
+    Declarar as propriedades do Objeto Máquina.
+
+    protected $fillable = ['id', 'descricao', 'potencia', 'dataCompra'];
+
+    class Aluno 
+    {
+        private $nome2;
+        private $endereco;
+
+        public function Fx() {return $this->nome2;}
+    }
+
+---------------
+
+    $a = new Aluno();
+
+    echo $a->nome2;
+    
+
+5) Codificar a migração
+    (Vai criar a tabela no banco)
+
+    database -> migrations -> create_maquinas_table
+
+    $table->id();
+    $table->string('descricao');
+    $table->decimal('potencia', 10, 2); //10 dígitos sendo 2 decimais
+    $table->date('dataCompra');
+    $table->timestamps();
+
+    Igual aos declarados no Model.
+
+6) Codificar seeder para cadastrar máquinas para testes
+    (Popular a tabela)
+
+    database -> seeders -> DatabaseSeeder.php
+
+    use Illuminate\Support\Facades\DB;
+
+    DB::table('maquinas')->insert([
+        'descricao'  => 'Maquina1',
+        'potencia'   => 3.2,
+        'dataCompra' => '2019-03-17'
+    ]);
+
+7) Criar tabela no banco de dados com inclusão dos dados definidos pelo Seeder
+    $ php artisan migrate --seed
+    $ php artisan migrate:fresh
+    $ php artisan migrate:fresh --seed
+
+8) Codificar as funções do controller
+    app -> http -> controllers -> MaquinaController.php
+
+    index(){}
+    return View('maquina.index')->with('dados',Maquina::all());
+
+    create(){} 
+    return View('maquina.create');
+
+    store(){}
+    Maquina::create( $request->all() );
+    return redirect('/maquina');
+
+    show(){}
+    return View('maquina.show')->with('dados',$maquina);
+
+    edit(){}
+    return View('maquina.edit')->with('dados',$maquina);
+
+    update(){}
+    $maquina->update($request->all());
+    return redirect('/maquina');
+
+    destroy(){}
+    $maquina->delete();
+
+9) Codificar as views
+    resources -> views 
+    Criar pasta maquina
+    Criar arquivos 
+        'index.blade.php'
+        'create.blade.php'
+        'show.blade.php'
+        'edit.blade.php'    
+
+10) Criar as validações de dados
+
+[Tópicos Especiais em Informática - Aula 26/03/2022]--------------------------
+var_dump($request); //CONSOLE.LOG NO PHP
+
+MaquinaRequest.php 
+    authorize() return true;
+    rules() return [
+        'descricao' => 'required|max:20',
+        'potencia' => 'required|numeric',
+        'dataCompra' => 'required|date'
+    ];
+
+// Link da documentação do Laravel
+https://laravel.com/docs/9.x
+
+// Mudar na store e update function
+// De tipo Request para MaquinaRequest
+
+-- ATIVIDADE PARA TREINO: Agenda Telefonica
+
+Contato
+- nome
+- telefone
+
+Model: Contato
+
+1) Criar classes
+$ php artisan make:model Contato --controller --resource --migration --factory
+// --controller = Controller vazio
+// --resource = Controller com funções básicas
+
+Se for esquecida a criação da migration, criar como:
+php artisan make:migration CriarContato --create=contatos
+
+2) Criar o request
+$ php artisan make:request ContatoRequest
+
+3) Definir as rotas
+Abrir Routes/Web.php
+
+use \App\Http\Controllers\ContatoController;
+Route::resources('maquina',ContatoController::class);
+
+4) Programar o model
+Abrir app/models/Contato
+
+5) Programar a migração
+    Schema::create('contatos', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome', 100);
+            $table->string('telefone', 20);
+            $table->timestamps();
+        });
+
+6) Executar a migração para criar a tabela no banco
+$ php artisan migrate
+
+7) Programar o controller
+
+8) Programar o ContatoRequest
+
+Resources/Views
+
+[Tópicos Especiais em Informática - Aula 26/03/2022]--------------------------
+Modelo
+1. Marca
+    • id
+    • nome
+    • paisOrigem
+
+2. Automóvel
+    • id
+    • placa
+    • dataCompra
+    • precoCompra
+
+3. Motorista
+    • id
+    • cpf
+    • nome
+    • dataNascimento
+
+REPETIDOS
+Automovel2Controller
+Automovel2 model
+migration create Automovel2
+routes
+
+CAMINHOS
+1. MODELS      = app/Models
+2. MIGRATIONS  = database/migrations
+   CONTROLLERS = app/Http/Controllers 
+   FACTORIES   = database/factories
+   REQUESTS    = app/Http/Requests
+   VIEWS       = resources/views
+   ROUTES      = routes/web.php
+
+PASSO A PASSO
+1. Criar os Models
+    $ php artisan make:model Marca --controller --resource --migration --factory
+    $ php artisan make:model Automovel2 --controller --resource --migration --factory
+    $ php artisan make:model Motorista --controller --resource -- migration ---factory
+
+2. Popular os campos dentro de seus models.
+    protected $fillable=['id', 'cpf', 'nome', 'dataNascimento'];
+
+3. Popular os campos dentro de seus migrations.
+    Schema::create('maquinas', function (Blueprint $table) {
+        $table->id();
+        $table->string('descricao');
+        $table->decimal('potencia', 10, 2); //10 dígitos sendo 2 decimais
+        $table->date('dataCompra');
+        $table->timestamps();
+    });
+
+4. Executar comando de migration.
+    $ php artisan migrate
+
+5. Criar relações no banco (Criar associação Marca X Automovel)
+    $ php artisan make:migration AdicionaAssociacaoMarcaAutomovel --table=automovel3s
+
+6. Schema::table('automovel3s', function (Blueprint $table) {
+        $table->bigInteger('marca_id');
+        $table->foreign('marca_id')->references('id')->on('marcas');
+    });
+
+    E a down
+
+7. $ php artisan migrate:rollback --step=1 (2 = 2 ultimas, 3 = 3 ultimas)
+8. $ php artisan tinker
+    >>> Use App\Models\Marca;
+    >>> Marca::create(['nome'=>'VW', 'paisOrigem'=>'Alemanha']);
+    >>> Marca::create(['nome'=>'Fiat', 'paisOrigem'=>'Italia']);
+    >>> Marca::all(); // SELECT * FROM MARCA;
+    >>> Marca::where('paisOrigem','=','Alemanha')->get();
+        // get sempre retorna uma coleção
+    >>> Use App\Models\Automovel3;
+
+    CTRL+C
+    Inserir no Model do Automovel o marca_id
+    >>> Automovel3::create(['placa'=>'ABC1234', 'dataCompra'=>'2000-03-17', 'precoCompra'=>'20000', 'marca_id'=>2]);
+    >>> Automovel3::create(['placa'=>'ABC5555', 'dataCompra'=>'2010-11-08', 'precoCompra'=>'30000', 'marca_id'=>1]);
+    >>> Automovel3::all(); // SELECT * FROM AUTOMOVEL;
+
+-------------------------------
+9. Navegar de Marca para Automovel
+    $m = Marca::where('nome','=','Fiat')->first();
+    // outra forma: $m = Marca::find(2);
+
+    $m->hasMany(Automovel::class);
+
+10. Navegar de Automovel para Marca
+    $a = Automovel::find(1);
+    $a->belongsTo(Marca::class)->nome;
+
+    // Marca <-- belongsTo -- Automovel
+    // Marca -- hasMany --> Automovel
+
+[Tópicos Especiais em Informática - Aula 19/02/2022]--------------------------
+TP - Restaurante
+
+TipoRestaurante
+- id 
+- descrição
+
+Restaurante
+- id
+- razaoSocial
+- cnpj
+- telefone
+- endereco
+- email
+
+Pratos
+- id
+- tipo
+- nome
+- preco
+
+• Criação de projeto Laravel com Composer:
+    $ composer create-project --prefer-dist laravel/laravel Restaurante
+
+TP - Restaurante - Models
+1) Criar projeto seguir roteiro em LaravelIntroducaoV2.pdf
+2) Criar o banco de dados "restaurante" no mysql
+3) Configurar o arquivo .env
+4) Executar as migrações geradas na criação do projeto
+
+5) Criar os Models, Controller, Migration
+    $ php artisan make:model TipoRestaurante --controller --resource --migration -–factory
+    $ php artisan make:model Restaurante --controller --resource --migration -–factory
+    $ php artisan make:model Prato --controller --resource --migration -–factory
+    $ php artisan make:request TipoRestauranteRequest
+    $ php artisan make:request RestauranteRequest
+    $ php artisan make:request PratoRequest
+
+6) Popular os campos dentro de seus models.
+    protected $fillable = ['id', 'descricao'];
+    -- etc...
+
+7) Popular os campos dentro de seus migrations.
+    Schema::create('maquinas', function (Blueprint $table) {
+        $table->id();
+        $table->string('descricao');
+        $table->decimal('potencia', 10, 2); //10 dígitos sendo 2 decimais
+        $table->date('dataCompra');
+        $table->timestamps();
+    });
+    -- etc...
+
+8) Associação Vários para Vários
+    $ php artisan make:migration CriaTabelaResolucao --create=restaurante_tipo_restaurante
+
+9) 
+    $table->id();
+    $table->bigInteger('tipo_restaurante_id')->unsigned();
+    $table->bigInteger('restaurante_id')->unsigned();
+    $table->timestamps();
+    $table->foreign('tipo_restaurante_id')->references('id')->on('...');
+    $table->...
